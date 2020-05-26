@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.Dao.IMiniDreamDAO">
+    <insert id="ajaxAddUserInfo" parameterType="com.example.demo.Entity.MiniUserInfo">
+        insert into mini_user_info (id,openId,gender,nickName,country,province,city,createTime,updateTime,avatarUrl) value (#{id},#{openId},#{gender},#{nickName},#{country},#{province},#{city},#{createTime},#{updateTime},#{avatarUrl})
+    </insert>
+    <update id="ajaxUpdateUserInfo" parameterType="com.example.demo.Entity.MiniUserInfo">
+        update mini_user_info set openId=#{openId},gender=#{gender},nickName=#{nickName},country=#{country},province=#{province},city=#{city},updateTime=#{updateTime},avatarUrl=#{avatarUrl} where id =#{id}
+    </update>
+    <select id="ajaxSearchUserInfo" parameterType="Map" resultType="com.example.demo.Entity.MiniUserInfo">
+        select * from mini_user_info where openId = #{openId};
+    </select>
+    <select id="getAllTags" resultType="com.example.demo.Entity.MiniDreamsTag">
+        select id,color,tagName as name from mini_dreams_tag where isOpen = 0 order by createTime desc;
+    </select>
+    <insert id="ajaxAddDreams" parameterType="com.example.demo.Entity.MiniDreamsInfo">
+        insert into mini_dreams_info (id,title,tagColor,tagName,content,picPath,openId,createTime) value (#{id},#{title},#{tagColor},#{tagName},#{content},#{picPath},#{openId},#{createTime})
+    </insert>
+    <select id="ajaxGetDreamsPager" parameterType="Map" resultType="com.example.demo.Entity.MiniDreanListEntity">
+        select d.*,u.nickName,u.avatarUrl,(select count(1) from mini_dreams_like l where l.dreamId = d.id) as likeNum ,(select count(1) from mini_dreams_comments c where c.dreamsId = d.id) as commentsNum,(select count(1) from mini_dreams_share s where s.dreamsId = d.id) as shareNum from mini_dreams_info d left join mini_user_info u on d.openId = u.openId order by d.createTime desc
+    </select>
+    <select id="getDreamDetail" parameterType="Map" resultType="com.example.demo.Entity.MiniDreanListEntity">
+        select d.*,u.nickName,u.avatarUrl,(select count(1) from mini_dreams_like l where l.dreamId = d.id) as likeNum ,(select count(1) from mini_dreams_comments c where c.dreamsId = d.id) as commentsNum,(select count(1) from mini_dreams_share s where s.dreamsId = d.id) as shareNum from mini_dreams_info d left join mini_user_info u on d.openId = u.openId where d.id = #{id}
+    </select>
+    <insert id="addComments" parameterType="com.example.demo.Entity.MiniDreamsComments">
+        insert into mini_dreams_comments (id,commentor,commentorName,dreamsId,commentContent,createTime) value (#{id},#{commentor},#{commentorName},#{dreamsId},#{commentContent},#{createTime})
+    </insert>
+    <select id="getComments" parameterType="Map" resultType="com.example.demo.Entity.MiniDreamsCommentsEntity">
+        select c.* ,u.avatarUrl from mini_dreams_comments c left join mini_user_info u on c.commentor = u.openId  where c.dreamsId = #{id} order by c.createTime desc
+    </select>
+    <select id="getShare" parameterType="Map" resultType="com.example.demo.Entity.MiniDreamsShare">
+        select * from mini_dreams_share c where c.dreamsId = #{id} and shareId = #{openId}
+    </select>
+    <select id="getLike" parameterType="Map" resultType="com.example.demo.Entity.MiniDreamsLike">
+        select * from mini_dreams_like c  where c.dreamId = #{id} and liker = #{openId}
+    </select>
+    <insert id="insertDreamShare" parameterType="com.example.demo.Entity.MiniDreamsShare">
+        insert into mini_dreams_share (id,dreamsId,shareId,shareName,createTime) value (#{id},#{dreamsId},#{shareId},#{shareName},#{createTime})
+    </insert>
+    <delete id="deleteDreamShare" parameterType="com.example.demo.Entity.MiniDreamsShare">
+        delete mini_dreams_share where dreamsId = #{dreamsId} and shareId = #{shareId}
+    </delete>
+</mapper>

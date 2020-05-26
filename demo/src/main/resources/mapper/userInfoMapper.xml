@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.Dao.IUserDao">
+    <select id="getUserInfo" resultType="com.example.demo.Entity.TbUserInfo">
+      select * from user_info
+  	</select>
+    <select id="checkUserInfo" resultType="com.example.demo.Entity.TbUserInfo" parameterType="map">
+      select * from user_info where userId = #{userId} and password = #{password}
+  	</select>
+    <insert id="addUserInfo" parameterType="com.example.demo.Entity.TbUserInfo">
+        insert into user_info (id,userId,userName,mobile,sex,address,password) value (#{id},#{userId},#{userName},#{mobile},#{sex},#{email},#{password})
+    </insert>
+    <insert id="insertCovidInfo" parameterType="com.example.demo.Entity.TbCOVIDInfo">
+        INSERT INTO tb_covid_info (mainId, id, createTime, modifyTime, imgUrl, dailyPic, currentConfirmedCount, confirmedCount, suspectedCount, curedCount, deadCount, seriousCount, suspectedIncr, currentConfirmedIncr, confirmedIncr, curedIncr, deadIncr, seriousIncr)
+        VALUES (#{mainId}, #{id}, #{createTime}, #{modifyTime}, #{imgUrl}, #{dailyPic}, #{currentConfirmedCount}, #{confirmedCount}, #{suspectedCount}, #{curedCount}, #{deadCount}, #{seriousCount}, #{suspectedIncr}, #{currentConfirmedIncr}, #{confirmedIncr}, #{curedIncr}, #{deadIncr}, #{seriousIncr})</insert>
+</mapper>
